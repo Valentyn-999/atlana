@@ -1,0 +1,12 @@
+.menuBar {
+    background-color: aliceblue;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 130px;
+}
+.ava {
+    max-height: 100px;
+    max-width: 100px;
+}
