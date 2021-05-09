@@ -1,7 +1,5 @@
 .headerBar {
-    /*background: aliceblue;*/
     display: flex;
-    /*flex-direction: column;*/
     align-items: center;
     justify-content: center;
     min-height: 130px;
@@ -12,10 +10,9 @@
     max-width: 100px;
 }
 .description{
-    /*min-height: 200px;*/
-    /*min-width: 400px;*/
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     font-size: 14px;
 }
 .main {
@@ -23,7 +20,7 @@
     padding: 0 30px 30px;
 }
 .card {
-    width: 280px
+    width: 280px;
 }
 .contentContainer {
     display: flex;

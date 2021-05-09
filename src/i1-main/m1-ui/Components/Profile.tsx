@@ -12,7 +12,7 @@ import Title from "antd/es/typography/Title";
 import {animateScroll} from "react-scroll";
 
 
-export const Profile:React.FC = () => {
+export const Profile: React.FC = () => {
     const dispatch = useDispatch()
     const userName = useSelector<AppRootStateType, string>(s => s.profile.name)
     const state = useSelector<AppRootStateType, UserDataType>(s => s.profile.data)
@@ -26,10 +26,10 @@ export const Profile:React.FC = () => {
         dispatch(getUserNameTC(userName))
 
     }, [userName, dispatch])
-    useEffect(()=>{
-        setFilteredRepos(repos)
-        const res = repos.filter(el => el.name.includes(inputValue))
-        setFilteredRepos(res)
+    useEffect(() => {
+            setFilteredRepos(repos)
+            const res = repos.filter(el => el.name.includes(inputValue))
+            setFilteredRepos(res)
         }, [setFilteredRepos, repos, inputValue]
     )
     if (userName === '') {
@@ -62,7 +62,7 @@ export const Profile:React.FC = () => {
                         cover={<a className={style.card} rel="noopener noreferrer"
                                   href={state.html_url} target="_blank"><img alt="example" src={state.avatar_url}/></a>}
                     >
-                        <div className={style.description}>{state.bio}</div>
+                        <div className={style.description}>{state.bio || itIsUnknown}</div>
                     </Card>
                     <div className={style.mainContent}>
                         <div className={style.peaceOfContent}>UserName: {state.login ? state.login : itIsUnknown}</div>
