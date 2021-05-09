@@ -6,9 +6,8 @@ import 'antd/dist/antd.css';
 import {Input, Layout, Table, Typography} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {Content, Header} from 'antd/lib/layout/layout';
-// @ts-ignore
 import style from './styles/Search.module.css'
-import { NavLink } from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import {PATH} from "../Routes";
 import {getUserNameAC} from "../../m2-bll/profileReducer";
 
@@ -36,7 +35,7 @@ export const Search = () => {
             title: 'Ava',
             dataIndex: 'ava',
             key: 'ava',
-            width: '250px',
+            width: '150px',
             render: (value: any) => {
                 return <div>
                     <NavLink to={PATH.PROFILE}>
@@ -49,7 +48,7 @@ export const Search = () => {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
-            width: '250px',
+            width: '150px',
             render: (value: React.ReactNode) => {
                 return <div>
                     <NavLink to={PATH.PROFILE}>{value}</NavLink>
@@ -58,14 +57,14 @@ export const Search = () => {
         },
     ]
 
-    const myCallBack = (name: string) => {
+    const getNameOnClick = (name: string) => {
         dispatch(getUserNameAC(name))
     }
 
     return <>
-        <Layout >
+        <Layout>
             <Header className={style.menuBar}>
-                <Title >GitHub Searcher</Title>
+                <Title>GitHub Searcher</Title>
                 <Input onChange={searchForProf}/>
             </Header>
             <Content>
@@ -74,17 +73,13 @@ export const Search = () => {
                        onRow={(record) => {
                            return {
                                onClick: () => {
-                                   myCallBack(record.name)
-                               }, // click row
+                                   getNameOnClick(record.name)
+                               },
                            };
                        }}
 
                 />
-            {/*{users && users.map((el: any) => (*/}
-            {/*    <img src={el.avatar_url}/>*/}
-            {/*))}*/}
             </Content>
-
         </Layout>
     </>
 }

@@ -1,37 +1,50 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../m2-bll/store";
 import {getUserNameTC} from '../../m2-bll/profileReducer';
 import {Redirect} from "react-router-dom";
 import {PATH} from "../Routes";
-import {UserDataType} from "../../m3-dal/api";
+import {ReposDataType, UserDataType} from "../../m3-dal/api";
 import {Card, Input, Layout} from 'antd';
 import style from "./styles/Profile.module.css";
-import {Header} from "antd/lib/layout/layout";
 import {Content} from "antd/es/layout/layout";
 import Title from "antd/es/typography/Title";
+import {animateScroll} from "react-scroll";
 
 
 export const Profile = () => {
     const dispatch = useDispatch()
     const userName = useSelector<AppRootStateType, string>(s => s.profile.name)
     const state = useSelector<AppRootStateType, UserDataType>(s => s.profile.data)
-    const {Meta} = Card;
-
-    // const data = []
-    // const newData = data.push(state)
+    const repos = useSelector<AppRootStateType, Array<ReposDataType>>(s => s.profile.repo)
+    const [filteredRepos, setFilteredRepos] = useState<Array<ReposDataType>>([])
+    const [inputValue, setInputValue] = useState('')
 
     useEffect(() => {
         dispatch(getUserNameTC(userName))
-    }, [userName])
+        setFilteredRepos(repos)
+        const res = repos.filter(el => el.name.includes(inputValue))
+        setFilteredRepos(res)
+    }, [userName, setFilteredRepos, repos, dispatch, inputValue])
 
     if (userName === '') {
         return <Redirect to={PATH.SEARCH}/>
     }
 
+    const filterMe = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.currentTarget.value
+        setInputValue(value)
+        scrollToBottom()
+    }
+
+    function scrollToBottom() {
+        animateScroll.scrollToBottom({
+            containerId: "options-holder"
+        });
+    }
+
     const joinDate = state?.created_at?.split('T')[0]
     const itIsUnknown = 'NO INFO'
-
     return (
         <Layout className={style.main}>
             <Title className={style.headerBar}>GitHub Searcher</Title>
@@ -39,7 +52,7 @@ export const Profile = () => {
                 <Card
                     hoverable
                     // style={{width: 240}}
-                    cover={<a className={style.card}
+                    cover={<a className={style.card} rel="noopener noreferrer"
                               href={state.html_url} target="_blank"><img alt="example" src={state.avatar_url}/></a>}
                 >
                     <div className={style.description}>{state.bio}</div>
@@ -57,10 +70,19 @@ export const Profile = () => {
                 </div>
             </Content>
             <div className={style.searchRepo}>
-                <Input placeholder={"Search for users' repositories"} onChange={ () => {} }/>
+                <Input placeholder={"Search for users' repositories"} onChange={filterMe}/>
             </div>
             <div>
-                {/*{state.}*/}
+                {filteredRepos.map((el: ReposDataType) => (
+                    <a key={el.id} href={el.html_url} rel="noopener noreferrer" target="_blank">
+                        <div className={style.repos}>
+                            <div className={style.singeRepo}>Name: {el.name}</div>
+                            <span className={style.singeRepo}>⭐️: {el.stargazers_count}</span>
+                            <span className={style.singeRepo}>Forks: {el.forks_count}</span>
+                        </div>
+                    </a>
+
+                ))}
             </div>
         </Layout>
     )

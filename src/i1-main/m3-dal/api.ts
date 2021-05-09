@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance  = axios.create ({
-    baseURL: 'https://api.github.com/',
+    baseURL: 'https://api.github.com',
 })
 
 export type UsersDataType = {
@@ -139,13 +139,13 @@ export type ReposDataType = {
 
 export const githubAPI = {
     getUsers(data: string) {
-        return instance.get(`search/users?q=${data}+in:user`)
+        return instance.get(`/search/users?q=${data}+in:user`)
     },
     getProfile(data: string) {
-        return instance.get(`users/${data}`)
+        return instance.get(`/users/${data}`)
     },
     getRepos(data: string) {
-        return instance.get(`users/${data}/repos`)
+        return instance.get(`/users/${data}/repos`)
     }
 }
 

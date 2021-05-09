@@ -1,17 +1,27 @@
 import {githubAPI, ReposDataType, UserDataType} from "../m3-dal/api";
 import {AxiosResponse} from "axios";
-import {Dispatch} from "redux";
+import {ThunkAction, ThunkDispatch} from "redux-thunk";
+import {AppRootStateType} from "./store";
+
 
 
 const initialState = {
     name: '',
     data: {} as UserDataType,
-    repo: []
+    repo: [] as Array<ReposDataType>
 }
 
-type InitialStateType = typeof initialState
+type GET_USER_NAME = ReturnType<typeof getUserNameAC>
+type GET_USER_DATA = ReturnType<typeof getUserDataAC>
+type GET_REPOS_DATA = ReturnType<typeof getReposDataAC>
 
-export const profileReducer = (state: InitialStateType = initialState, action: any): InitialStateType => {
+
+type InitialStateType = typeof initialState
+type ActionsType = GET_USER_NAME | GET_USER_DATA | GET_REPOS_DATA
+type ThunkType = ThunkAction<void, AppRootStateType, unknown, ActionsType>
+
+
+export const profileReducer = (state: InitialStateType = initialState, action: ActionsType): InitialStateType => {
     switch (action.type) {
         case getUserName:
             return {...state, name: action.name}
@@ -29,20 +39,29 @@ export const getUserDataAC = (data: UserDataType) => ({type: getUserData, data} 
 export const getReposDataAC = (data: Array<ReposDataType>) => ({type: getReposData, data} as const)
 
 //tc
-export const getUserNameTC = (data: string) => (dispatch: Dispatch) => {
+export const getUserNameTC = (data: string): ThunkType => (dispatch: ThunkDispatch<AppRootStateType, unknown, ActionsType>) => {
     githubAPI.getProfile(data)
         .then((res: AxiosResponse<any>) => {
             const data: UserDataType = res.data
-            console.log(data)
             dispatch(getUserDataAC(data))
         })
         .catch((err) => {
-            console.log('sth went wrong!!!')
+            const error = err.response.data
+                ? err.response.data.message
+                : (err.message + ', more details in the console');
+            console.log(error)
         })
     githubAPI.getRepos(data)
         .then((res: AxiosResponse<any>) => {
             const data: Array<ReposDataType> = res.data
             dispatch(getReposDataAC(data))
+        })
+        .catch((err) => {
+            const error = err.response.data
+                ? err.response.data.message
+                : (err.message + ', more details in the console');
+            console.log(error)
+
         })
 }
 

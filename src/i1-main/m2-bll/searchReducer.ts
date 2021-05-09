@@ -1,16 +1,23 @@
 import {githubAPI, UsersDataType} from "../m3-dal/api";
 import {AxiosResponse} from "axios";
-import {Dispatch} from "redux";
-
+import {ThunkAction, ThunkDispatch} from "redux-thunk";
+import {AppRootStateType} from "./store";
+import {message} from "antd";
 
 
 const initialState = {
     data: [] as Array<UsersDataType>
 }
 
-type InitialStateType = typeof initialState
+type USERS = ReturnType<typeof usersAC>
 
-export const searchReducer = (state: InitialStateType = initialState, action: any): InitialStateType => {
+
+type InitialStateType = typeof initialState
+type ActionsType = USERS
+type ThunkType = ThunkAction<void, AppRootStateType, unknown, ActionsType>
+
+
+export const searchReducer = (state: InitialStateType = initialState, action: ActionsType): InitialStateType => {
     switch (action.type) {
         case getUsers:
             return {...state, data: action.data}
@@ -23,18 +30,18 @@ export const usersAC = (data: Array<UsersDataType>) =>
     ({type: getUsers, data} as const)
 
 //tc
-export const searchTC = (data: string) => (dispatch: Dispatch) => {
+export const searchTC = (data: string): ThunkType => (dispatch: ThunkDispatch<AppRootStateType, unknown, ActionsType>) => {
     githubAPI.getUsers(data)
         .then((res: AxiosResponse<any>) => {
             const data: Array<UsersDataType> = res.data.items
             dispatch(usersAC(data))
         })
         .catch((err) => {
-            console.log('sth went wrong!!!')
-            // const error = err.response
-            //     ? err.response.data.error : (err.message + ', more details in the console');
-            // dispatch(onErrorAC(error))
-            // message.error(error)
+            debugger
+            const error = err.response.data
+                ? err.response.data.message
+                : (err.message + ', more details in the console');
+            message.error(error)
         })
 }
 
