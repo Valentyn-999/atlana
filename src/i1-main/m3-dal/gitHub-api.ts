@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const instance  = axios.create ({
+const instance = axios.create({
     baseURL: 'https://api.github.com',
 })
 
@@ -106,7 +106,7 @@ export type ReposDataType = {
     labels_url: string
     language: string
     languages_url: string
-    license: {key: string, name: string, spdx_id: string, url: string, node_id: string}
+    license: { key: string, name: string, spdx_id: string, url: string, node_id: string }
     merges_url: string
     milestones_url: string
     mirror_url: null | any
@@ -115,7 +115,7 @@ export type ReposDataType = {
     notifications_url: string
     open_issues: number
     open_issues_count: number
-    owner: {login: string, id: number, node_id: string, avatar_url: string, gravatar_id: string}
+    owner: { login: string, id: number, node_id: string, avatar_url: string, gravatar_id: string }
     private: boolean
     pulls_url: string
     pushed_at: string
@@ -138,14 +138,14 @@ export type ReposDataType = {
 }
 
 export const githubAPI = {
-    getUsers(data: string) {
-        return instance.get(`/search/users?q=${data}+in:user`)
+    getUsers(userName: string) {
+        return instance.get(`/search/users?q=${userName}+in:user`)
     },
-    getProfile(data: string) {
-        return instance.get(`/users/${data}`)
+    getProfile(userName: string) {
+        return instance.get(`/users/${userName}`)
     },
-    getRepos(data: string) {
-        return instance.get(`/users/${data}/repos`)
+    getRepos(userName: string) {
+        return instance.get(`/users/${userName}/repos`)
     }
 }
 

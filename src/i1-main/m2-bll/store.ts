@@ -4,8 +4,6 @@ import {searchReducer} from "./searchReducer";
 import {profileReducer} from "./profileReducer";
 
 
-
-
 const rootReducer = combineReducers({
     users: searchReducer,
     profile: profileReducer

@@ -1,9 +1,9 @@
 import React from 'react';
 import {searchTC} from "../../m2-bll/searchReducer";
 import {AppRootStateType} from "../../m2-bll/store";
-import {UsersDataType} from "../../m3-dal/api";
+import {UsersDataType} from "../../m3-dal/gitHub-api";
 import 'antd/dist/antd.css';
-import {Input, Layout, Table, Typography} from "antd";
+import {Input, Layout, Spin, Table, Typography} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {Content, Header} from 'antd/lib/layout/layout';
 import style from './styles/Search.module.css'
@@ -11,9 +11,10 @@ import {NavLink} from 'react-router-dom';
 import {PATH} from "../Routes";
 import {getUserNameAC} from "../../m2-bll/profileReducer";
 
-export const Search = () => {
+export const Search:React.FC = () => {
     const dispatch = useDispatch()
     const users = useSelector<AppRootStateType, Array<UsersDataType>>(s => s.users.data)
+    const loading = useSelector<AppRootStateType, boolean>(s => s.users.loading)
     const {Title} = Typography
 
 
@@ -67,19 +68,21 @@ export const Search = () => {
                 <Title>GitHub Searcher</Title>
                 <Input onChange={searchForProf}/>
             </Header>
-            <Content>
-                <Table dataSource={data}
-                       columns={columns}
-                       onRow={(record) => {
-                           return {
-                               onClick: () => {
-                                   getNameOnClick(record.name)
-                               },
-                           };
-                       }}
+            <Spin spinning={loading}>
+                <Content>
+                    <Table dataSource={data}
+                           columns={columns}
+                           onRow={(record) => {
+                               return {
+                                   onClick: () => {
+                                       getNameOnClick(record.name)
+                                   },
+                               };
+                           }}
 
-                />
-            </Content>
+                    />
+                </Content>
+            </Spin>
         </Layout>
     </>
 }
